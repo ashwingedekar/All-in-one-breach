@@ -1,0 +1,4 @@
+server=tp-prtg-101-100.comtelindia.com:10443
+username=Ashwin.Gedekar
+passhash=440909494
+devid=9089
