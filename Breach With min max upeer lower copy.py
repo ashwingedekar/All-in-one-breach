@@ -21,8 +21,16 @@ server_address = server_parameters.get("server")
 username = server_parameters.get("username")
 passhash = server_parameters.get("passhash")
 
-devid = server_parameters.get("devid")
+devid = []
 
+
+
+with open("output.txt", "r") as file:
+    for line in file:
+        line = line.strip()
+        if "=" in line:
+            key, value = line.split("=")
+            devid.append(value)
 
 api_endpoint = f'https://{server_address}/api/table.xml?content=sensortree&id={devid}&username={username}&passhash={passhash}'
 
@@ -48,7 +56,7 @@ else:
     print(f"Error: {response.status_code} - {response.text}")
 
 
-#======================================================================================#
+
 
 def remove_characters(text):
     
@@ -174,8 +182,9 @@ for id_value in tqdm(id_values, desc="Processing IDs"):
         continue  
     if id_value not in upper_warning_limits:
         print(f"Upper warning limit not set for ID: {id_value}")
+        
         continue
-
+    
     filtered_data = selected_data[selected_data > upper_warning_limits.get(id_value)]
 
     if not filtered_data.empty:
@@ -198,7 +207,16 @@ for id_value in tqdm(id_values, desc="Processing IDs"):
             "Date": row['Date Time'],
             "Traffic Total": row["Traffic Total (Speed)"]
         } for index, row in df.iterrows() if row['Traffic Total (Speed)'] > upper_warning_limits.get(id_value)])
-
+    else:
+        max_traffic = selected_data.max()
+        output_data.append({
+            "Device Name": parent_device_name,
+            "Device ID": DeviceID,
+            "Sensor Name": sensor_device_name,
+            "Sensor ID": id_value,
+            "Date": df.loc[df['Traffic Total (Speed)'].idxmax(), 'Date Time'],
+            "Traffic Total": max_traffic
+        }) 
 output_df = pd.DataFrame(output_data)
 
 output_directory = "output"
