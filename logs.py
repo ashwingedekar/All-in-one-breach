@@ -12,7 +12,7 @@ username = server_parameters.get("username")
 passhash = server_parameters.get("passhash")
 param = server_parameters.get("day")
 
-api_endpoint = f'https://{server_address}/api/table.csv?content=messages&columns=objid,datetime,parent,type,name,status,message&drel={param}&count=*&username={username}&passhash={passhash}'
+api_endpoint = f'https://{server_address}/api/table.csv?content=messages&columns=objid,datetime,parent,type,name,status,message&filter_drel={param}&count=*&username={username}&passhash={passhash}'
 current_datetime = datetime.now().strftime("%Y%m%d-%H%M%S")
 file_path = f"prtg-{current_datetime}-101.100.csv"
 
